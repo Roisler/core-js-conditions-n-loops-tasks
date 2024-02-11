@@ -519,8 +519,40 @@ function shuffleChar(str, iterations) {
  * @param {number} number The source number
  * @returns {number} The nearest larger number, or original number if none exists.
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
+function getNearestBigger(number) {
+  const array = Array.from(`${number}`);
+  let indexMinimalElement = 0;
+
+  const getNumber = (arr, indexMinElement) => {
+    const arrayOfNumber = [...arr];
+    let startIndex = arrayOfNumber.length - 1;
+    const arrDigitsRight = [];
+
+    while (arrayOfNumber[startIndex - 1] >= arrayOfNumber[startIndex]) {
+      arrDigitsRight.push(arrayOfNumber[startIndex]);
+      startIndex -= 1;
+    }
+    arrDigitsRight.push(arr[startIndex]);
+    arrDigitsRight.sort((a, b) => a - b);
+    if (arrayOfNumber[startIndex - 1] < arrayOfNumber[startIndex]) {
+      const temporaryMain = arrayOfNumber[startIndex - 1];
+      const temporaryRight = arrDigitsRight[indexMinElement];
+      arrayOfNumber[startIndex - 1] = temporaryRight;
+      arrDigitsRight[indexMinElement] = temporaryMain;
+    }
+
+    arrDigitsRight.sort((a, b) => a - b);
+    arrayOfNumber.splice(startIndex, Infinity);
+
+    return Number([...arrayOfNumber, ...arrDigitsRight].join(''));
+  };
+
+  let result = getNumber(array, indexMinimalElement);
+  while (result < number) {
+    indexMinimalElement += 1;
+    result = getNumber(array, indexMinimalElement);
+  }
+  return result;
 }
 
 module.exports = {
